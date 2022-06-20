@@ -1,5 +1,4 @@
 const express = require("express");
-const { findByIdAndDelete } = require("../models/contactModel");
 const Contact = require("../models/contactModel");
 
 // create an instance of express Router
@@ -51,7 +50,7 @@ router.delete("/:id",async(req,res)=>{
         const deletedContact = await findByIdAndDelete(req.params.id);
         res.status(200).json(deletedContact);
     }catch(err){
-        res.status(500).json({Error:err});
+        res.status(500).json({Error:err.message});
     }
 })
 
