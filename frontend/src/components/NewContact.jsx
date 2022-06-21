@@ -1,22 +1,21 @@
 import { Alert, AlertIcon, CircularProgress } from "@chakra-ui/react";
-import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { createContact } from "../features/contactsSlice";
+import { createContact, updateContact } from "../features/contactsSlice";
 
-const NewContact = () => {
+const NewContact = ({ contact, setContact }) => {
   const dispatch = useDispatch();
   const contactsState = useSelector((state) => state.contactsState);
-
-  const [contact, setContact] = useState({
-    contactName: "",
-    phone: "",
-    email: "",
-  });
 
   const handleSubmit = (event) => {
     event.preventDefault();
 
-    dispatch(createContact(contact));
+    // if the contact already have an id, we perform the update operation
+    // otherwise add the contact as a new one
+    if (contact._id) {
+      dispatch(updateContact(contact));
+    } else {
+      dispatch(createContact(contact));
+    }
 
     setContact({
       contactName: "",
@@ -59,17 +58,20 @@ const NewContact = () => {
               setContact({ ...contact, email: event.target.value })
             }
           />
-          {contactsState.createContactStatus === "pending" ? (<div className="flex justify-center">
-            <CircularProgress isIndeterminate color="blue.300" /></div>
+          {contactsState.createContactStatus === "pending" ? (
+            <div className="flex justify-center">
+              <CircularProgress isIndeterminate color="blue.300" />
+            </div>
           ) : (
             <button
               type="submit"
-              className="block text-gray-50 bg-blue-500 mx-auto my-3 py-1 px-2 text-xl"
+              className="block text-gray-50 bg-blue-500 mx-auto mt-3 mb-2 py-1 px-2 text-xl"
             >
-              ADD CONTACT
+              {contact._id ? "UPDATE" : "ADD CONTACT"}
             </button>
           )}
 
+          {/* showing alerts or messages */}
           {contactsState.createContactStatus === "rejected" ? (
             <Alert status="error">
               <AlertIcon />
@@ -96,6 +98,18 @@ const NewContact = () => {
             </Alert>
           ) : null}
 
+          {contactsState.deleteContactStatus === "rejected" ? (
+            <Alert status="error">
+              <AlertIcon />
+              There was an error processing your request
+            </Alert>
+          ) : null}
+          {contactsState.deleteContactStatus === "success" ? (
+            <Alert status="success">
+              <AlertIcon />
+              Contact deleted successfully...
+            </Alert>
+          ) : null}
         </form>
       </div>
     </>

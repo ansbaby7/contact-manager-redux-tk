@@ -47,7 +47,7 @@ router.put("/:id",async(req,res)=>{
 //delete a contact
 router.delete("/:id",async(req,res)=>{
     try{
-        const deletedContact = await findByIdAndDelete(req.params.id);
+        const deletedContact = await Contact.findByIdAndDelete(req.params.id);
         res.status(200).json(deletedContact);
     }catch(err){
         res.status(500).json({Error:err.message});

@@ -1,8 +1,8 @@
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { getContacts } from "../features/contactsSlice";
+import { deleteContact, getContacts } from "../features/contactsSlice";
 
-const ContactsList = () => {
+const ContactsList = ({setContact}) => {
   const dispatch = useDispatch();
   const contactsState = useSelector((state) => state.contactsState);
   const { contacts } = contactsState;
@@ -10,6 +10,10 @@ const ContactsList = () => {
   useEffect(() => {
     dispatch(getContacts());
   }, [dispatch]);
+
+  const handleDelete = (_id) => {
+    dispatch(deleteContact(_id));
+  }
 
   return (
     <div>
@@ -32,8 +36,8 @@ const ContactsList = () => {
                 Email: <span>{contact.email}</span>
               </h3>
               <div className="mb-1 mt-2 flex justify-start gap-x-3">
-                <button className="uppercase bg-blue-600 py-1 px-2 text-gray-100 text-lg">Update</button>
-                <button className="uppercase bg-red-600 py-1 px-2 text-gray-100 text-lg">Delete</button>
+                <button className="uppercase bg-blue-600 py-1 px-2 text-gray-100 text-lg" onClick={() => setContact(contact)}>Update</button>
+                <button className="uppercase bg-red-600 py-1 px-2 text-gray-100 text-lg" onClick={() => handleDelete(contact._id)}>Delete</button>
               </div>
             </div>
           );
