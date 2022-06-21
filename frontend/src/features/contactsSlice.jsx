@@ -28,11 +28,26 @@ export const createContact = createAsyncThunk(
   }
 );
 
+export const getContacts = createAsyncThunk(
+  "contacts/getContacts",
+  async(id=null,{rejectWithValue}) => {
+    try{
+      const response = await axios.get(apiURL + "contacts")
+      return response.data
+    }catch(err){
+      console.log(err);
+      return rejectWithValue(err.response.data)
+    }
+  }
+)
+
 const contactsSlice = createSlice({
   name: "contacts",
   initialState,
   reducers: {},
   extraReducers: {
+
+    // create new contact - post request
     [createContact.pending]: (state, action) => {
       return {
         ...state,
@@ -67,6 +82,48 @@ const contactsSlice = createSlice({
         createContactError: action.payload,
         getContactsStatus: "",
         getContactsError: "",
+        updateContactStatus: "",
+        updateContactError: "",
+        deleteContactStatus: "",
+        deleteContactError: "",
+        }
+    },
+
+    // get all contacts - put request
+    [getContacts.pending]: (state, action) => {
+      return {
+        ...state,
+        createContactStatus: "",
+        createContactError: "",
+        getContactsStatus: "pending",
+        getContactsError: "",
+        updateContactStatus: "",
+        updateContactError: "",
+        deleteContactStatus: "",
+        deleteContactError: "",
+      }
+    },
+    [getContacts.fulfilled]: (state,action)=>{
+        return{
+        ...state,
+        contacts: action.payload, // action.payload contains the array of contacts fetched
+        createContactStatus: "",
+        createContactError: "",
+        getContactsStatus: "success",
+        getContactsError: "",
+        updateContactStatus: "",
+        updateContactError: "",
+        deleteContactStatus: "",
+        deleteContactError: "",
+        }
+    },
+    [getContacts.rejected]: (state,action)=>{
+        return{
+        ...state,
+        createContactStatus: "",
+        createContactError: "",
+        getContactsStatus: "rejected",
+        getContactsError: action.payload,
         updateContactStatus: "",
         updateContactError: "",
         deleteContactStatus: "",
