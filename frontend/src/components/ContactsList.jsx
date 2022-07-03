@@ -17,10 +17,10 @@ const ContactsList = ({setContact}) => {
 
   return (
     <div>
-      <h2 className="text-center">{contacts && contacts.length} Contacts</h2>
       <div className="flex justify-center">
-        <h1 className="my-4 uppercase text-3xl font-bold">Contact List</h1>
+        <h1 className="mt-4 mb-2 uppercase text-3xl font-bold">Contact List</h1>
       </div>
+      <h2 className="text-center mb-2">{contacts && contacts.length} {contacts.length===1?"Contact":"Contacts"}</h2>
       <div className="grid grid-cols-4">
         {contactsState.getContactsStatus === "pending" ? "Loading..." : null}
         {contacts.map((contact) => {
